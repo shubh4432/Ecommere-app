@@ -20,7 +20,6 @@ const Header: React.FC<Props> = ({ products, setFilteredProducts }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const autoplayInterval = 5000; // Autoplay interval in milliseconds (5 seconds)
 
   const images = [
     { id: 1, url: "/ecommerce-1.jpg" },
@@ -58,32 +57,6 @@ const Header: React.FC<Props> = ({ products, setFilteredProducts }) => {
     setFilteredProducts(filteredProducts);
   }, [selectedCategory, searchTerm, products, setFilteredProducts]);
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout | null = null;
-
-    if (typeof window !== "undefined") {
-      intervalId = setInterval(handleNextImage, autoplayInterval);
-    }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, []);
-
-  const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
-  const currentImageUrl = images[currentImageIndex].url;
-
   // Ref to the dropdown container to detect clicks inside/outside
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -101,6 +74,18 @@ const Header: React.FC<Props> = ({ products, setFilteredProducts }) => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const currentImageUrl = images[currentImageIndex].url;
 
   return (
     <div
